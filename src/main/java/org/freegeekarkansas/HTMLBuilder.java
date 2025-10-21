@@ -20,6 +20,7 @@ public class HTMLBuilder {
         }
         String html = sb.toString();
 
+        
         html = html.replace("%CPU_CLOCK%", Double.toString(build.cpu.clock));
     }
 }

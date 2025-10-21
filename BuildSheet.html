@@ -1,0 +1,219 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuildSheet</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 650px;
+            margin: 20px auto;
+            padding: 15px;
+            border: 2px solid #333;
+            color: #222;
+            background: #f9f9f9;
+            line-height: 1.3;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .header { text-align: center; margin-bottom: 15px; background: #e0e0e0; padding: 10px; border-radius: 5px; }
+        .header img { max-width: 130px; margin-bottom: 5px; }
+        .header h1 { font-size: 1.5em; color: #333; margin: 0; }
+        .price { text-align: center; font-size: 1.4em; font-weight: bold; margin-bottom: 15px; border-bottom: 2px solid #555; padding-bottom: 8px; background: #d9edf7; color: #31708f; }
+        .section { margin-bottom: 15px; }
+        .section h2 { font-size: 1.2em; margin-bottom: 8px; text-transform: uppercase; border-bottom: 1px dashed #555; padding-bottom: 4px; color: #444; }
+        .field { display: flex; justify-content: space-between; margin-bottom: 6px; }
+        .field label { font-weight: bold; width: 40%; white-space: nowrap; color: #333; }
+        .field span { width: 55%; padding: 3px; font-size: 0.95em; background: #fff; border: 1px solid #ddd; border-radius: 3px; }
+        .multi-field { display: flex; justify-content: space-between; margin-bottom: 6px; }
+        .multi-field label { font-weight: bold; width: 30%; white-space: nowrap; color: #333; }
+        .multi-field span { width: 65%; padding: 3px; font-size: 0.95em; }
+        .checkbox-group { display: flex; justify-content: space-between; margin-top: 3px; }
+        .checkbox-group label { width: 30%; font-size: 0.85em; color: #444; }
+        .checkbox-group input[type="checkbox"] { margin-right: 3px; }
+        .notes { width: 100%; padding: 3px; font-size: 0.95em; margin-top: 3px; background: #fff; border: 1px solid #ddd; border-radius: 3px; }
+        .footer { text-align: center; font-size: 0.85em; margin-top: 15px; border-top: 2px solid #555; padding-top: 8px; color: #666; background: #f1f1f1; }
+        @media print {
+            body { border: none; margin: 0; padding: 0; box-shadow: none; background: #fff; }
+            .header { background: #fff; }
+            .header img { max-width: 110px; }
+            .price { font-size: 1.3em; background: #fff; }
+            .no-print { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="freegeek_logo.png" alt="FreeGeekArkansasLogo" id="logo">
+        <h1>BuildSheet</h1>
+    </div>
+    <div class="price">
+        <label>Price:</label>
+        <span id="price"></span>
+    </div>
+    <div class="section">
+        <h2>GeneralInformation</h2>
+        <div class="field"><label>Description:</label><span id="description"></span></div>
+        <div class="field"><label>S/N:</label><span id="sn"></span></div>
+    </div>
+    <div class="section">
+        <h2>HardwareSpecifications</h2>
+        <div class="field"><label>CPU:</label><span id="cpuDetails"></span></div>
+        <div class="field"><label>RAM:</label><span id="ram"></span>GB</div>
+        <div class="field"><label>Storage:</label><span id="storage"></span>GBHDD/SSD</div>
+        <div class="field"><label>Battery:</label><span id="batteryDetails"></span></div>
+        <div class="field"><label>ScreenSize:</label><span id="screenSize"></span>Inch</div>
+        <div class="multi-field"><label>Features:</label><span>
+            <div class="checkbox-group">
+                <label><input type="checkbox" id="wifiCheck">WiFi</label>
+                <label><input type="checkbox" id="webcamCheck">Webcam</label>
+            </div>
+        </span></div>
+        <div class="field"><label>Audio:</label><span id="audioDetails"></span></div>
+        <div class="field"><label>Notes:</label><span class="notes" id="hardwareNotes"></span></div>
+    </div>
+    <div class="section">
+        <h2>SoftwareDetails</h2>
+        <div class="field"><label>OS:</label><span id="os"></span></div>
+        <div class="field"><label>UpdateVersion:</label><span id="updateVersion"></span></div>
+        <div class="multi-field"><label>InstalledSoftware:</label><span>
+            <div class="checkbox-group">
+                <label><input type="checkbox" id="vlcCheck">VLC</label>
+                <label><input type="checkbox" id="chromeCheck">Chrome</label>
+                <label><input type="checkbox" id="firefoxCheck">Firefox</label>
+                <label><input type="checkbox" id="libreOfficeCheck">LibreOffice</label>
+            </div>
+        </span></div>
+        <div class="field"><label>Notes:</label><span class="notes" id="softwareNotes"></span></div>
+    </div>
+    <div class="section">
+        <h2>ApprovalInformation</h2>
+        <div class="field"><label>BuiltBy:</label><span id="builtBy"></span></div>
+        <div class="field"><label>BuildDate:</label><span id="buildDate"></span></div>
+        <div class="field"><label>ApprovedBy:</label><span id="approvedBy"></span></div>
+        <div class="field"><label>ApprovedDate:</label><span id="approvedDate"></span></div>
+    </div>
+    <div class="footer">
+        Password&SecurityQuestions:@freegeek
+    </div>
+
+    <script>
+        // JavaScript object with data
+        const buildData = {
+            price: '$500',
+            description: 'RefurbishedLaptop',
+            sn: 'SN123456',
+            cpuModel: 'Inteli5-8250U',
+            cores: '4',
+            threads: '8',
+            clockSpeed: '1.6',
+            ram: '8',
+            storage: '256',
+            batteryHealth: '85',
+            screenSize: '14',
+            useTime: '6',
+            wifi: true,
+            webcam: true,
+            speakers: 'Yes',
+            mic: 'Yes',
+            hardwareNotes: 'Goodcondition',
+            os: 'Ubuntu20.04',
+            updateVersion: 'Latest',
+            vlc: true,
+            chrome: true,
+            firefox: true,
+            libreOffice: true,
+            softwareNotes: 'Allupdated',
+            builtBy: 'JohnDoe',
+            buildDate: '2025-10-20',
+            approvedBy: 'JaneSmith',
+            approvedDate: '2025-10-21'
+        };
+
+        // Populate the fields with data from the object
+        document.getElementById('price').textContent = buildData.price;
+        document.getElementById('description').textContent = buildData.description;
+        document.getElementById('sn').textContent = buildData.sn;
+        document.getElementById('cpuDetails').textContent = `${buildData.cpuModel},${buildData.cores}Cores,${buildData.threads}Threads,${buildData.clockSpeed}GHz`;
+        document.getElementById('ram').textContent = buildData.ram;
+        document.getElementById('storage').textContent = buildData.storage;
+        document.getElementById('batteryDetails').textContent = `${buildData.batteryHealth}%Health,${buildData.useTime}HrsUse`;
+        document.getElementById('screenSize').textContent = buildData.screenSize;
+        document.getElementById('audioDetails').textContent = `${buildData.speakers}Speakers,${buildData.mic}Mic`;
+        document.getElementById('hardwareNotes').textContent = buildData.hardwareNotes;
+        document.getElementById('os').textContent = buildData.os;
+        document.getElementById('updateVersion').textContent = buildData.updateVersion;
+        document.getElementById('softwareNotes').textContent = buildData.softwareNotes;
+        document.getElementById('builtBy').textContent = buildData.builtBy;
+        document.getElementById('buildDate').textContent = buildData.buildDate;
+        document.getElementById('approvedBy').textContent = buildData.approvedBy;
+        document.getElementById('approvedDate').textContent = buildData.approvedDate;
+
+        // Set checkbox states
+        document.getElementById('wifiCheck').checked = buildData.wifi;
+        document.getElementById('webcamCheck').checked = buildData.webcam;
+        document.getElementById('vlcCheck').checked = buildData.vlc;
+        document.getElementById('chromeCheck').checked = buildData.chrome;
+        document.getElementById('firefoxCheck').checked = buildData.firefox;
+        document.getElementById('libreOfficeCheck').checked = buildData.libreOffice;
+
+        // Function to print the document
+        function printDocument() {
+            window.print();
+        }
+
+        // Add print button
+        const printBtn = document.createElement('button');
+        printBtn.textContent = 'Print';
+        printBtn.className = 'no-print';
+        printBtn.style.marginTop = '10px';
+        printBtn.style.padding = '3px 8px';
+        printBtn.style.backgroundColor = '#5cb85c';
+        printBtn.style.color = '#fff';
+        printBtn.style.border = 'none';
+        printBtn.style.borderRadius = '3px';
+        printBtn.style.cursor = 'pointer';
+        printBtn.onclick = printDocument;
+        document.body.appendChild(printBtn);
+    </script>
+</body>
+</html>
