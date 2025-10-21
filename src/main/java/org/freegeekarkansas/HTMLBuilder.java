@@ -1,16 +1,17 @@
 package org.freegeekarkansas;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
 
 public class HTMLBuilder {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         BuildInfo build = HardwareGrabber.getHardware();
         buildHTML(build);
         System.out.println();
     }
 
-    public static void buildHTML(BuildInfo build) {
+    public static void buildHTML(BuildInfo build) throws Exception {
         FileReader fr = new FileReader("BuildSheet.html");
         Scanner scan = new Scanner(fr);
         StringBuilder sb = new StringBuilder();
