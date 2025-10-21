@@ -5,6 +5,7 @@ import java.util.List;
 public class BuildInfo {
     public String description; //add input for description
     public String sn; //add input for serial number
+    public String screensize; //add input for screen size
     public CPU cpu;
 
     public double ram;
