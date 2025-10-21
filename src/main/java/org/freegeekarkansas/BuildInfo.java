@@ -1,19 +1,15 @@
 package org.freegeekarkansas;
 
+import java.util.List;
+
 public class BuildInfo {
-    public int year;
+    public CPU cpu;
 
-    public int cpuCores;
-    public int cpuThreads;
-    public int cpuPassmark;
-    public float cpuClock;
-    public float cpuTurbo;
-
-    public int ram;
+    public double ram;
     public String ramType;
 
-    public int storage;
-    public String storageType;
+    public List<Double> diskSizes;
+    public List<Integer> diskTypes;
 
     public String gpu;
 
@@ -21,3 +17,4 @@ public class BuildInfo {
 
     public int price;
 }
+

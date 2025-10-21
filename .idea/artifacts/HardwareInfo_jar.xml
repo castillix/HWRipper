@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="HardwareInfo:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/HardwareInfo_jar</output-path>
+    <root id="archive" name="HardwareInfo.jar">
+      <element id="module-output" name="HardwareInfo" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/xerial/sqlite-jdbc/3.50.3.0/sqlite-jdbc-3.50.3.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/2.0.7/slf4j-api-2.0.7.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/java/dev/jna/jna-platform/5.13.0/jna-platform-5.13.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/java/dev/jna/jna/5.13.0/jna-5.13.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/oshi/oshi-core/6.4.2/oshi-core-6.4.2.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
