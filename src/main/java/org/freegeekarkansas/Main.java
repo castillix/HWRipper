@@ -18,6 +18,7 @@ public class Main {
         } else {
             BuildInfo build = HardwareGrabber.getHardware();
             System.out.println("Calculated price: $" + HardwareGrabber.getPrice(build));
+            HttpManager.servePage(build);
         }
     }
 
