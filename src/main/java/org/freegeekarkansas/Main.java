@@ -17,7 +17,7 @@ public class Main {
             PassmarkInfo.loadPassmarkInfo();
         } else {
             BuildInfo build = HardwareGrabber.getHardware();
-            build.price = HardwareGrabber.getPrice(build);
+            HardwareGrabber.getPrice(build);
 //            System.out.println(HTMLBuilder.buildHTML(build));
 //            System.out.println("Calculated price: $" + HardwareGrabber.getPrice(build));
             HttpManager httpManager = new HttpManager(build);
