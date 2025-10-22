@@ -11,9 +11,15 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 
 public class HttpManager implements HttpHandler {
-    public static void servePage(BuildInfo build) throws Exception {
+    public BuildInfo build;
+
+    public HttpManager(BuildInfo build) {
+        this.build = build;
+    }
+
+    public void servePage() throws Exception {
         HttpServer server = HttpServer.create(new InetSocketAddress(8787), 0);
-        server.createContext("/", new HttpManager());
+        server.createContext("/", this);
         server.setExecutor(null);
         server.start();
         if(Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
@@ -23,10 +29,14 @@ public class HttpManager implements HttpHandler {
 
     @Override
     public void handle(HttpExchange t) throws IOException {
-        String response = "Get http payload";
-        t.sendResponseHeaders(200, response.length());
-        OutputStream os = t.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
+        try {
+            String response = HTMLBuilder.buildHTML(this.build);
+            t.sendResponseHeaders(200, response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        } catch(Exception e) {
+            // do nothing
+        }
     }
 }

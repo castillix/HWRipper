@@ -17,8 +17,11 @@ public class Main {
             PassmarkInfo.loadPassmarkInfo();
         } else {
             BuildInfo build = HardwareGrabber.getHardware();
-            System.out.println("Calculated price: $" + HardwareGrabber.getPrice(build));
-            HttpManager.servePage(build);
+            build.price = HardwareGrabber.getPrice(build);
+//            System.out.println(HTMLBuilder.buildHTML(build));
+//            System.out.println("Calculated price: $" + HardwareGrabber.getPrice(build));
+            HttpManager httpManager = new HttpManager(build);
+            httpManager.servePage();
         }
     }
 
