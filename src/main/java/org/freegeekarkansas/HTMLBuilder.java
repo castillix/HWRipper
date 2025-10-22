@@ -21,6 +21,18 @@ public class HTMLBuilder {
         String html = sb.toString();
 
         
+        html = html.replace("%CPU_NAME%", Double.toString(build.cpu.name));
+        html = html.replace("%CPU_CORES%", Double.toString(build.cpu.cores));
+        html = html.replace("%CPU_THREADS%", Double.toString(build.cpu.threads));
+        html = html.replace("%CPU_CLOCK%", Double.toString(build.cpu.clock));
+        html = html.replace("%CPU_CLOCK%", Double.toString(build.cpu.clock));
+        html = html.replace("%CPU_CLOCK%", Double.toString(build.cpu.clock));
+        html = html.replace("%CPU_CLOCK%", Double.toString(build.cpu.clock));
+        html = html.replace("%CPU_CLOCK%", Double.toString(build.cpu.clock));
+        html = html.replace("%CPU_CLOCK%", Double.toString(build.cpu.clock));
+        html = html.replace("%CPU_CLOCK%", Double.toString(build.cpu.clock));
+        html = html.replace("%CPU_CLOCK%", Double.toString(build.cpu.clock));
+        html = html.replace("%CPU_CLOCK%", Double.toString(build.cpu.clock));
         html = html.replace("%CPU_CLOCK%", Double.toString(build.cpu.clock));
     }
 }

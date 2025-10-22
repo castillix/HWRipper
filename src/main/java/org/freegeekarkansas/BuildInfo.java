@@ -6,6 +6,14 @@ public class BuildInfo {
     public String description; //add input for description
     public String sn; //add input for serial number
     public String screensize; //add input for screen size
+    public String batteryhealth; //add input for battery health
+    public String batterylife; //add input for battery use time
+    public String hardwarenotes; //add input for hardware notes, i.e. Discounts for battery health, screen condition, etc, defaut to "Nothing to note"
+    public String softwarenotes; //add input for software notes, default to "Nothing to note"
+    public String builddate; //add input for build date, maybe just call the current date?
+    public String builder; //add input for who built the machine
+
+
     public CPU cpu;
 
     public double ram;
