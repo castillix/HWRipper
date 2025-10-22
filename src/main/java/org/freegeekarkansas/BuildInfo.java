@@ -5,9 +5,9 @@ import java.util.List;
 public class BuildInfo {
     public String description = "no description"; //add input for description
     public String sn = "no s/n"; //add input for serial number
-    public String screenSize = "no screenSize"; //add input for screen size
-    public String batteryHealth = "no batteryHealth"; //add input for battery health
-    public String batteryLife = "no batteryLife"; //add input for battery use time
+    public String screenSize = "N/A"; //add input for screen size
+    public String batteryHealth = "N/A"; //add input for battery health
+    public String batteryLife = "N/A"; //add input for battery use time
     public String hardwareNotes = "no hardwareNotes"; //add input for hardware notes, i.e. Discounts for battery health, screen condition, etc, defaut to "Nothing to note"
     public String softwareNotes = "no softwareNotes"; //add input for software notes, default to "Nothing to note"
     public String buildDate = "no buildDate"; //add input for build date, maybe just call the current date?

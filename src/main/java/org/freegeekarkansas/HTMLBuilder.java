@@ -25,7 +25,7 @@ public class HTMLBuilder {
         html = html.replace("%CPU_CORES%", Integer.toString(build.cpu.cores));
         html = html.replace("%CPU_THREADS%", Integer.toString(build.cpu.threads));
         html = html.replace("%CPU_CLOCK%", Double.toString(build.cpu.clock));
-        html = html.replace("%PRICE%", Double.toString(build.price));
+        html = html.replace("%PRICE%", Integer.toString(build.price));
         html = html.replace("%DESCRIPTION%", build.description);
         html = html.replace("%SN%", build.sn);
         html = html.replace("%RAM_AMNT%", Double.toString(build.ram));

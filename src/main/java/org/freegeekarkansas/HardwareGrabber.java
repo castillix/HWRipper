@@ -4,7 +4,11 @@ import oshi.*;
 import oshi.hardware.*;
 import oshi.software.os.OperatingSystem;
 
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -31,6 +35,8 @@ public class HardwareGrabber {
             }
         }
 
+        build.sn = si.getHardware().getComputerSystem().getSerialNumber();
+
         build.ram = Math.round(((double) mem.getTotal() / 107374182.4)) / 10.0;
         try {
             build.ramType = mem.getPhysicalMemory().getFirst().getMemoryType();
@@ -54,6 +60,7 @@ public class HardwareGrabber {
                     break;
             }
         }
+        System.out.println();
 
 
 //        build.storage = new ArrayList<String>();
@@ -80,6 +87,7 @@ public class HardwareGrabber {
                     break;
             }
             build.diskSizes.add(Math.round(((double) disk.getSize() / 107374182.4)) / 10.0);
+            System.out.println();
         }
 
         build.gpu = gpus.getFirst().getName();
@@ -88,7 +96,8 @@ public class HardwareGrabber {
         return build;
     }
 
-    public static int getPrice(BuildInfo build) {
+    public static void getPrice(BuildInfo build) {
+        Scanner scan = new Scanner(System.in);
         double yearPrice = (build.cpu.year - 2012) * 10;
         double corePrice = build.cpu.cores * (yearPrice * 0.025);
         double threadPrice = (build.cpu.threads - build.cpu.cores) * 0.75;
@@ -133,10 +142,11 @@ public class HardwareGrabber {
         System.out.println("Please enter GPU price (default 0): ");
         int gpuPrice = 0;
         try {
-            gpuPrice = Integer.parseInt(new Scanner(System.in).nextLine());
+            gpuPrice = Integer.parseInt(scan.nextLine());
         } catch(Exception e) {
-            System.out.println("Error parsing input, defaulting GPU price to 0");
+//            System.out.println("Error parsing input, defaulting GPU price to 0");
         }
+        System.out.println();
 
         double osModifier = 0;
         double temp = ((((corePrice + threadPrice) * turbo) + yearPrice) + ramPrice + drivePrice + gpuPrice);
@@ -148,17 +158,56 @@ public class HardwareGrabber {
             osModifier = ((1.2 * temp) - temp);
         }
         System.out.println(build.os);
+        System.out.println();
 
         System.out.println("Is this a (L)aptop or a (D)esktop? (default is desktop)");
         try {
             if(new Scanner(System.in).nextLine().equalsIgnoreCase("l")) {
                 gpuPrice += 10;
+
+                boolean good = false;
+                System.out.println();
+                System.out.println("Please enter laptop screen size: ");
+                build.screenSize = scan.nextLine();
+                System.out.println();
+                System.out.println("Please enter laptop battery duration in hours (or press enter to leave blank: ");
+                build.batteryLife = scan.nextLine();
+                System.out.println();
+                System.out.println("Please enter laptop battery health percentage (or press enter to leave blank)");
+                build.batteryHealth = scan.nextLine();
             }
         } catch(Exception e) {
             System.out.println("Error parsing input, defaulting to desktop");
         }
+        System.out.println();
+
+        System.out.println("Please enter computer name/description: ");
+        build.description = scan.nextLine();
+        System.out.println();
+
+        System.out.println("Detected S/N [" + build.sn + "], please enter new S/N or leave blank to keep default: ");
+        String sn = scan.nextLine();
+        if(!sn.isEmpty()) {
+            build.sn = sn;
+            System.out.println("Keeping default S/N");
+        }
+        System.out.println();
+
+        System.out.println("Please enter any other relevant notes about the computer: ");
+        build.hardwareNotes = scan.nextLine();
+        System.out.println();
+
+        System.out.println("Please enter any other notes about the software:");
+        build.softwareNotes = scan.nextLine();
+        System.out.println();
+
+        System.out.println("Please enter builder name: ");
+        build.builder = scan.nextLine();
+        System.out.println();
+
+        build.buildDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"));
 
         double finalPrice = (cpuPrice + ramPrice + drivePrice + gpuPrice + osModifier) + 40;
-        return (int) Math.floor(finalPrice);
+        build.price = (int) Math.floor(finalPrice);
     }
 }
