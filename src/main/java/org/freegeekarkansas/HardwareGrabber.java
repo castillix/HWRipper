@@ -73,6 +73,8 @@ public class HardwareGrabber {
             System.out.println("1 - hdd");
             System.out.println("2 - ssd (default)");
             System.out.println("3 - nvme");
+            System.out.println("4 - USB (skip disk)");
+            boolean skip = false;
             switch(scan.nextLine()) {
                 case "1":
                     build.diskTypes.add(1);
@@ -82,11 +84,17 @@ public class HardwareGrabber {
                     build.diskTypes.add(3);
                     break;
 
+                case "4":
+                    skip = true;
+                    break;
+
                 default:
                     build.diskTypes.add(2);
                     break;
             }
-            build.diskSizes.add(Math.round(((double) disk.getSize() / 107374182.4)) / 10.0);
+            if(!skip) {
+                build.diskSizes.add(Math.round(((double) disk.getSize() / 107374182.4)) / 10.0);
+            }
             System.out.println();
         }
 

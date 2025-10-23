@@ -28,7 +28,7 @@ public class HTMLBuilder {
         html = html.replace("%PRICE%", Integer.toString(build.price));
         html = html.replace("%DESCRIPTION%", build.description);
         html = html.replace("%SN%", build.sn);
-        html = html.replace("%RAM_AMNT%", Double.toString(build.ram));
+        html = html.replace("%RAM_AMNT%", Double.toString(Math.ceil(build.ram)));
 
         StringBuilder allDisksBuilder = new StringBuilder();
         for(int i = 0; i < build.diskTypes.size(); i++) {
