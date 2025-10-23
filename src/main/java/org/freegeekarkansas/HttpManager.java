@@ -45,7 +45,7 @@ public class HttpManager implements HttpHandler {
             } catch (Exception e) {
                 // do nothing
             }
-        } else if(path.equals("/src/main/resources/FreeGeekLogo.png")) {
+        } else if(path.equals("/FreeGeekLogo.png")) {
             try {
                 File file = new File("FreeGeekLogo.png");
                 byte[] fileBytes = Files.readAllBytes(file.toPath());
