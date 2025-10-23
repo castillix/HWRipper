@@ -3,19 +3,14 @@ package org.freegeekarkansas;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import org.apache.commons.io.IOUtils;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class HttpManager implements HttpHandler {
     public BuildInfo build;
@@ -38,6 +33,7 @@ public class HttpManager implements HttpHandler {
     public void handle(HttpExchange t) throws IOException {
         URI requestURI = t.getRequestURI();
         String path = requestURI.getPath();
+        System.out.println(path);
 
         if(path.equals("/")) {
             try {
@@ -51,10 +47,9 @@ public class HttpManager implements HttpHandler {
             }
         } else if(path.equals("/src/main/resources/FreeGeekLogo.png")) {
             try {
-                System.out.println("test");
-                InputStream logo = this.getClass().getClassLoader().getResourceAsStream("FreeGeekLogo.png");
-
-                byte[] fileBytes = IOUtils.toByteArray(logo);
+                File file = new File("FreeGeekLogo.png");
+                byte[] fileBytes = Files.readAllBytes(file.toPath());
+                System.out.println(fileBytes.length);
 
                 t.getResponseHeaders().set("Content-Type", "image/png");
                 t.sendResponseHeaders(200, fileBytes.length);
@@ -67,6 +62,5 @@ public class HttpManager implements HttpHandler {
                 throw new RuntimeException(e);
             }
         }
-        System.out.println(path);
     }
 }

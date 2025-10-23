@@ -170,10 +170,10 @@ public class HardwareGrabber {
                 System.out.println("Please enter laptop screen size: ");
                 build.screenSize = scan.nextLine();
                 System.out.println();
-                System.out.println("Please enter laptop battery duration in hours (or press enter to leave blank: ");
+                System.out.println("Please enter laptop battery duration in hours (or press enter to leave blank): ");
                 build.batteryLife = scan.nextLine();
                 System.out.println();
-                System.out.println("Please enter laptop battery health percentage (or press enter to leave blank)");
+                System.out.println("Please enter laptop battery health percentage (or press enter to leave blank): ");
                 build.batteryHealth = scan.nextLine();
             }
         } catch(Exception e) {
