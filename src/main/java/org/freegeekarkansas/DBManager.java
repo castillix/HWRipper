@@ -72,7 +72,7 @@ public class DBManager {
     }
 
     public static CPU getCpuFromString(String str) {
-        String sql = "SELECT * FROM cpus WHERE name LIKE ?";
+        String sql = "SELECT * FROM cpus WHERE name LIKE ? ORDER BY name";
 
         try(Connection conn = DriverManager.getConnection(url);
             PreparedStatement st = conn.prepareStatement(sql)) {
