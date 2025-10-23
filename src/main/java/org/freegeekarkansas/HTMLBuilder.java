@@ -28,7 +28,7 @@ public class HTMLBuilder {
         html = html.replace("%PRICE%", Integer.toString(build.price));
         html = html.replace("%DESCRIPTION%", build.description);
         html = html.replace("%SN%", build.sn);
-        html = html.replace("%RAM_AMNT%", Double.toString(Math.ceil(build.ram)));
+        html = html.replace("%RAM_AMNT%", Integer.toString((int)Math.ceil(build.ram)));
 
         StringBuilder allDisksBuilder = new StringBuilder();
         for(int i = 0; i < build.diskTypes.size(); i++) {
@@ -42,7 +42,7 @@ public class HTMLBuilder {
         html = html.replace("%BATTERY_LIFE%", build.batteryLife);
         html = html.replace("%BATTERY_HEALTH%", build.batteryHealth);
         html = html.replace("%HARDWARE_NOTES%", build.hardwareNotes);
-        html = html.replace("%OS_NAME%", build.os);
+        html = html.replace("%OS_NAME%", build.os.substring(build.os.indexOf(" "))/*.split("build")[0]*/);
         html = html.replace("%SOFTWARE_NOTES%", build.softwareNotes);
         html = html.replace("%BUILDER%", build.builder);
         html = html.replace("%BUILD_DATE%", build.buildDate);
