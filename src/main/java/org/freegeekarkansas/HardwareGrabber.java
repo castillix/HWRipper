@@ -26,6 +26,7 @@ public class HardwareGrabber {
         BuildInfo build = new BuildInfo();
 
         String cpuStr = hcpu.getProcessorIdentifier().getName();
+        System.out.println("Detected CPU: " + cpuStr);
 //        ArrayList<CPU> cpus = DBManager.getCPUs();
         for(String term : cpuStr.split(" ")) {
             CPU cpu = DBManager.getCpuFromString("%" + term + "%");
@@ -106,13 +107,6 @@ public class HardwareGrabber {
 
     public static void getPrice(BuildInfo build) {
         Scanner scan = new Scanner(System.in);
-        double yearPrice = (build.cpu.year - 2012) * 10;
-        double corePrice = build.cpu.cores * (yearPrice * 0.025);
-        double threadPrice = (build.cpu.threads - build.cpu.cores) * 0.75;
-        double passmark = build.cpu.passmark;
-        double turbo = (build.cpu.turbo == -1) ? build.cpu.clock : build.cpu.turbo;
-
-        double cpuPrice = (((corePrice + threadPrice) * turbo) + yearPrice) * ((passmark/9530) * 0.67);
 
         double ramPrice = build.ram;
         switch(build.ramType) {
@@ -151,27 +145,18 @@ public class HardwareGrabber {
         int gpuPrice = 0;
         try {
             gpuPrice = Integer.parseInt(scan.nextLine());
+            System.out.println(gpuPrice);
         } catch(Exception e) {
 //            System.out.println("Error parsing input, defaulting GPU price to 0");
         }
         System.out.println();
 
-        double osModifier = 0;
-        double temp = ((((corePrice + threadPrice) * turbo) + yearPrice) + ramPrice + drivePrice + gpuPrice);
-        if(build.os.contains("Microsoft")) {
-            osModifier = 0;
-        } else if(build.os.contains("Linux")) {
-            osModifier = ((0.85 * temp) - temp);
-        } else if(build.os.contains("MacOS")) {
-            osModifier = ((1.2 * temp) - temp);
-        }
-        System.out.println(build.os);
-        System.out.println();
-
+        boolean laptop = false;
         System.out.println("Is this a (L)aptop or a (D)esktop? (default is desktop)");
         try {
             if(new Scanner(System.in).nextLine().equalsIgnoreCase("l")) {
                 gpuPrice += 10;
+                laptop = true;
 
                 boolean good = false;
                 System.out.println();
@@ -215,7 +200,44 @@ public class HardwareGrabber {
 
         build.buildDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"));
 
+
+        double yearPrice = (build.cpu.year - 2012) * ((laptop) ? 6 : 10);
+        double corePrice = build.cpu.cores * (yearPrice * 0.025);
+        double threadPrice = (build.cpu.threads - build.cpu.cores) * 0.75;
+        double passmark = build.cpu.passmark;
+        double turbo = (build.cpu.turbo == -1) ? build.cpu.clock : build.cpu.turbo;
+
+
+        double osModifier = 0;
+        double temp = ((((corePrice + threadPrice) * turbo) + yearPrice) + ramPrice + drivePrice + gpuPrice);
+        if(build.os.contains("Microsoft")) {
+            osModifier = 0;
+        } else if(build.os.contains("Linux")) {
+            osModifier = ((0.85 * temp) - temp);
+        } else if(build.os.contains("MacOS")) {
+            osModifier = ((1.2 * temp) - temp);
+        }
+        System.out.println(build.os);
+        System.out.println();
+
+        double cpuPrice = (laptop) ?
+                (((corePrice + threadPrice) * turbo) + yearPrice) * (passmark/5813) :
+                (((corePrice + threadPrice) * turbo) + yearPrice) * ((passmark/9530) * 0.67);
+
         double finalPrice = (cpuPrice + ramPrice + drivePrice + gpuPrice + osModifier) + 40;
+        System.out.println("laptop: " + laptop);
+        System.out.println("cpuPrice: " + cpuPrice);
+        System.out.println("corePrice: " + corePrice);
+        System.out.println("threadPrice: " + threadPrice);
+        System.out.println("turbo: " + turbo);
+        System.out.println("yearPrice: " + yearPrice);
+        System.out.println("passmark: " + passmark);
+
+        System.out.println("ramPrice: " + ramPrice);
+        System.out.println("drivePrice: " + drivePrice);
+        System.out.println("gpuPrice: " + gpuPrice);
+        System.out.println("osModifier: " + osModifier);
+
         build.price = (int) Math.floor(finalPrice);
     }
 }
