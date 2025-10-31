@@ -27,13 +27,26 @@ public class HardwareGrabber {
 
         String cpuStr = hcpu.getProcessorIdentifier().getName();
         System.out.println("Detected CPU: " + cpuStr);
-//        ArrayList<CPU> cpus = DBManager.getCPUs();
+        ArrayList<CPU> cpus = new ArrayList<>();
         for(String term : cpuStr.split(" ")) {
-            CPU cpu = DBManager.getCpuFromString("%" + term + "%");
-            if(cpu.id != -1) {
-                build.cpu = cpu;
-                break;
+            ArrayList<CPU> temp = DBManager.getCpuFromString("%" + term + "%");
+            if(temp.size() < 5) {
+                cpus.addAll(temp);
             }
+        }
+
+        if(cpus.isEmpty()) {
+            System.out.println("Something went wrong finding cpu information!");
+            System.out.println("Price shown will not be correct");
+            build.cpu = new CPU();
+        } else if(cpus.size() == 1) {
+            build.cpu = cpus.getFirst();
+        } else {
+            System.out.println("Detected multiple possible matches, please select correct option: ");
+            for (int i = 0; i < cpus.size(); i++) {
+                System.out.println("[" + (i + 1) + "] - " + cpus.get(i).name);
+            }
+            build.cpu = cpus.get(new Scanner(System.in).nextInt() - 1);
         }
 
         build.sn = si.getHardware().getComputerSystem().getSerialNumber();
@@ -72,25 +85,25 @@ public class HardwareGrabber {
             System.out.println("Current disk: " + disk.getModel());
             System.out.println("Please select disk type: ");
             System.out.println("1 - hdd");
-            System.out.println("2 - ssd (default)");
+            System.out.println("2 - ssd");
             System.out.println("3 - nvme");
-            System.out.println("4 - USB (skip disk)");
+            System.out.println("4 - skip drive (default)");
             boolean skip = false;
             switch(scan.nextLine()) {
                 case "1":
                     build.diskTypes.add(1);
                     break;
 
+                case "2":
+                    build.diskTypes.add(2);
+                    break;
+
                 case "3":
                     build.diskTypes.add(3);
                     break;
 
-                case "4":
-                    skip = true;
-                    break;
-
                 default:
-                    build.diskTypes.add(2);
+                    skip = true;
                     break;
             }
             if(!skip) {
@@ -210,11 +223,11 @@ public class HardwareGrabber {
 
         double osModifier = 0;
         double temp = ((((corePrice + threadPrice) * turbo) + yearPrice) + ramPrice + drivePrice + gpuPrice);
-        if(build.os.contains("Microsoft")) {
+        if(build.os.toLowerCase().contains("microsoft")) {
             osModifier = 0;
-        } else if(build.os.contains("Linux")) {
+        } else if(build.os.toLowerCase().contains("linux")) {
             osModifier = ((0.85 * temp) - temp);
-        } else if(build.os.contains("MacOS")) {
+        } else if(build.os.toLowerCase().contains("macos")) {
             osModifier = ((1.2 * temp) - temp);
         }
         System.out.println(build.os);

@@ -3,6 +3,7 @@ package org.freegeekarkansas;
 import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class DBManager {
     public static String url = "jdbc:sqlite:cpus.db";
@@ -71,8 +72,9 @@ public class DBManager {
         return new ArrayList<>();
     }
 
-    public static CPU getCpuFromString(String str) {
+    public static ArrayList<CPU> getCpuFromString(String str) {
         String sql = "SELECT * FROM cpus WHERE name LIKE ? ORDER BY name";
+        ArrayList<CPU> cpus = new ArrayList<>();
 
         try(Connection conn = DriverManager.getConnection(url);
             PreparedStatement st = conn.prepareStatement(sql)) {
@@ -80,7 +82,7 @@ public class DBManager {
             st.setString(1, str);
             ResultSet res = st.executeQuery();
 
-            if(res.next()) {
+            while(res.next()) {
                 CPU cpu = new CPU();
                 cpu.id = res.getInt("id");
                 cpu.year = res.getInt("year");
@@ -92,12 +94,13 @@ public class DBManager {
                 cpu.turbo = res.getDouble("turbo");
                 cpu.passmark = res.getInt("passmark");
 
-                return cpu;
+                cpus.add(cpu);
             }
         } catch(Exception e) {
             System.out.println("Error retrieving from database " + e);
         }
-        return new CPU();
+
+        return cpus;
     }
 
     public static void initTable() {
