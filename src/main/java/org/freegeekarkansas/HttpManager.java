@@ -24,8 +24,12 @@ public class HttpManager implements HttpHandler {
         server.createContext("/", this);
         server.setExecutor(null);
         server.start();
+        System.out.println("Hosting page on http://localhost:8787");
+
         if(Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
             Desktop.getDesktop().browse(new URI("http://localhost:8787"));
+        } else {
+            System.out.println("There was a problem opening the page automatically, it'll need to be opened manually");
         }
     }
 
