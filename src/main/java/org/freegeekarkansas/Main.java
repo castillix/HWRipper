@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
 //        PassmarkInfo.loadPassmarkInfo();
 //        ArrayList<CPU> test = DBManager.getCPUs();
 //        System.out.println(test.size());
