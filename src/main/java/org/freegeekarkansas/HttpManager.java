@@ -24,7 +24,7 @@ public class HttpManager implements HttpHandler {
         server.createContext("/", this);
         server.setExecutor(null);
         server.start();
-        System.out.println("Hosting page on http://localhost:8787");
+        System.out.println("\nHosting page on http://localhost:8787");
 
         if(Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
             Desktop.getDesktop().browse(new URI("http://localhost:8787"));
@@ -37,7 +37,6 @@ public class HttpManager implements HttpHandler {
     public void handle(HttpExchange t) throws IOException {
         URI requestURI = t.getRequestURI();
         String path = requestURI.getPath();
-        System.out.println(path);
 
         if(path.equals("/")) {
             try {
@@ -53,7 +52,6 @@ public class HttpManager implements HttpHandler {
             try {
                 File file = new File("FreeGeekLogo.png");
                 byte[] fileBytes = Files.readAllBytes(file.toPath());
-                System.out.println(fileBytes.length);
 
                 t.getResponseHeaders().set("Content-Type", "image/png");
                 t.sendResponseHeaders(200, fileBytes.length);

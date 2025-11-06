@@ -189,6 +189,9 @@ public class HardwareGrabber {
 
         System.out.println("Please enter computer name/description: ");
         build.description = scan.nextLine();
+        if(build.description.isEmpty()) {
+            build.description = "Computer Name";
+        }
         System.out.println();
 
         System.out.println("Detected S/N [" + build.sn + "], please enter new S/N or leave blank to keep default: ");
@@ -201,10 +204,16 @@ public class HardwareGrabber {
 
         System.out.println("Please enter any other relevant notes about the computer: ");
         build.hardwareNotes = scan.nextLine();
+        if(build.hardwareNotes.isEmpty()) {
+            build.hardwareNotes = "N/A";
+        }
         System.out.println();
 
         System.out.println("Please enter any other notes about the software:");
         build.softwareNotes = scan.nextLine();
+        if(build.softwareNotes.isEmpty()) {
+            build.softwareNotes = "N/A";
+        }
         System.out.println();
 
         System.out.println("Please enter builder name: ");
