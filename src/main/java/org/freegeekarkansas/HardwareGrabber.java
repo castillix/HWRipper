@@ -39,6 +39,13 @@ public class HardwareGrabber {
             System.out.println("Something went wrong finding cpu information!");
             System.out.println("Price shown will not be correct");
             build.cpu = new CPU();
+            build.cpu.clock = 1;
+            build.cpu.turbo = 1;
+            build.cpu.cores = 1;
+            build.cpu.threads = 1;
+            build.cpu.passmark = 1;
+            build.cpu.name = "Not found in passmark";
+            build.cpu.year = 2020;
         } else if(cpus.size() == 1) {
             build.cpu = cpus.getFirst();
         } else {
