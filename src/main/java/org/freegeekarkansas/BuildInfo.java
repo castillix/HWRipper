@@ -19,7 +19,7 @@ public class BuildInfo {
     public double ram;
     public String ramType;
 
-    public List<Double> diskSizes;
+    public List<Integer> diskSizes;
     public List<Integer> diskTypes;
 
     public String gpu;

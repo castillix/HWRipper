@@ -50,7 +50,7 @@ public class HTMLBuilder {
         return html;
     }
 
-    public static String getStorageString(List<Double> diskSizes, List<Integer> diskTypes, int i) {
+    public static String getStorageString(List<Integer> diskSizes, List<Integer> diskTypes, int i) {
         return diskSizes.get(i) + " GB " + ((diskTypes.get(i) == 1) ? "HDD" : (diskTypes.get(i) == 2) ? "SSD" : "NVMe");
     }
 }

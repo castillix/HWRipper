@@ -114,7 +114,7 @@ public class HardwareGrabber {
                     break;
             }
             if(!skip) {
-                build.diskSizes.add(Math.round(((double) disk.getSize() / 107374182.4)) / 10.0);
+                build.diskSizes.add((int)(Math.round(((double) disk.getSize() / 107374182.4)) / 10));
             }
             System.out.println();
         }
